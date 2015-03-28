@@ -265,10 +265,25 @@ typedef NS_ENUM(NSInteger, TouchEvent )
     
     /*SCNBox **/box      = [SCNBox boxWithWidth:50 height:160 length:50 chamferRadius:10];
     /*SCNNode **/boxNode = [SCNNode node];
-    boxNode.position = SCNVector3Make(0, 89, 50);
+    boxNode.position = SCNVector3Make(0, 80, 50);
     boxNode.geometry = box;
     boxNode.geometry.firstMaterial.diffuse.contents = [UIColor greenColor];
     [scnView.scene.rootNode addChildNode:boxNode];
+    
+    /*SCNBox **/box      = [SCNBox boxWithWidth:50 height:80 length:50 chamferRadius:10];
+    /*SCNNode **/boxNode = [SCNNode node];
+    boxNode.position = SCNVector3Make(50, 40, 50);
+    boxNode.geometry = box;
+    boxNode.geometry.firstMaterial.diffuse.contents = [UIColor orangeColor];
+    [scnView.scene.rootNode addChildNode:boxNode];
+
+    /*SCNBox **/box      = [SCNBox boxWithWidth:50 height:80 length:50 chamferRadius:10];
+    /*SCNNode **/boxNode = [SCNNode node];
+    boxNode.position = SCNVector3Make(50, 40, 100);
+    boxNode.geometry = box;
+    boxNode.geometry.firstMaterial.diffuse.contents = [UIColor cyanColor];
+    [scnView.scene.rootNode addChildNode:boxNode];
+
 }
 
 - (void) cancelScreenDecelerating
