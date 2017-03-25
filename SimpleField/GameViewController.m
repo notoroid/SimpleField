@@ -213,7 +213,7 @@ typedef NS_ENUM(NSInteger, TouchEvent )
     
     
     UIRotationGestureRecognizer *rotationGesture = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotation:)];
-    [panGesture requireGestureRecognizerToFail:panGesture];
+    [rotationGesture requireGestureRecognizerToFail:panGesture];
     rotationGesture.delegate = self;
     rotationGesture.delaysTouchesBegan = NO;
     rotationGesture.delaysTouchesEnded = NO;
@@ -227,11 +227,11 @@ typedef NS_ENUM(NSInteger, TouchEvent )
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
     tapGesture.delegate = self;
 
-    NSMutableArray *gestureRecognizers = [NSMutableArray arrayWithArray:@[panGesture,rotationGesture ,pinchGesture ,tapGesture]];
+    NSMutableArray *gestureRecognizers = [NSMutableArray arrayWithArray:@[panGesture,rotationGesture,pinchGesture,tapGesture]];
 
     // Gesturesをマージ
     SCNView *scnView = (SCNView *)self.view;
-    [gestureRecognizers addObjectsFromArray:scnView.gestureRecognizers];
+//    [gestureRecognizers addObjectsFromArray:scnView.gestureRecognizers];
     scnView.gestureRecognizers = gestureRecognizers;
 }
 
@@ -403,22 +403,22 @@ typedef NS_ENUM(NSInteger, TouchEvent )
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchesBegan: call");
+//    NSLog(@"touchesBegan: call");
     [self onEvent:TouchEventBegan withTouches:touches withEvent:event];
 }
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchesMoved: call");
+//    NSLog(@"touchesMoved: call");
     [self onEvent:TouchEventMoved withTouches:touches withEvent:event];
 }
 
 - (void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchesCancelled: call");
+//    NSLog(@"touchesCancelled: call");
     [self onEvent:TouchEventCancelled withTouches:touches withEvent:event];
 }
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"touchesEnded:");
+//    NSLog(@"touchesEnded:");
     [self onEvent:TouchEventEnded withTouches:touches withEvent:event];
 }
 
@@ -429,10 +429,41 @@ typedef NS_ENUM(NSInteger, TouchEvent )
 
 - (void)handlePan:(UIPanGestureRecognizer *)panGestureRecognizer
 {
+    NSLog(@"handlePan: call");
+    
     // retrieve the SCNView
     SCNView *scnView = (SCNView *)self.view;
     
-    if( panGestureRecognizer.numberOfTouches == 1 ){
+//    NSLog(@"panGestureRecognizer.numberOfTouches=%@",@(panGestureRecognizer.numberOfTouches));
+   
+    NSString *state = nil;
+    switch (panGestureRecognizer.state) {
+        case UIGestureRecognizerStatePossible:
+            state = @"UIGestureRecognizerStatePossible";
+            break;
+        case UIGestureRecognizerStateBegan:
+            state = @"UIGestureRecognizerStateBegan";
+            break;
+        case UIGestureRecognizerStateChanged:
+            state = @"UIGestureRecognizerStateChanged";
+            break;
+        case UIGestureRecognizerStateEnded:
+            state = @"UIGestureRecognizerStateEnded";
+            break;
+        case UIGestureRecognizerStateCancelled:
+            state = @"UIGestureRecognizerStateCancelled";
+            break;
+        case UIGestureRecognizerStateFailed:
+            state = @"UIGestureRecognizerStateFailed";
+            break;
+        default:
+            break;
+    }
+    NSLog(@"panGestureRecognizer.state=%@",state);
+    
+    
+    
+    if( panGestureRecognizer.numberOfTouches <= 1 ){
         [self cancelScreenDecelerating];
             // Decelerating をキャンセル
 
@@ -733,7 +764,7 @@ typedef NS_ENUM(NSInteger, TouchEvent )
     return YES;
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return UIInterfaceOrientationMaskAllButUpsideDown;
